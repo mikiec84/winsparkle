@@ -271,7 +271,7 @@ private:
 	bool		  m_runUpdateOnClose;
 	wxString	  m_downloadedInstallerPath;
 
-    static const int RELNOTES_WIDTH = 400;
+    static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
 };
 
