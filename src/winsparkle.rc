@@ -39,7 +39,7 @@ UpdateAvailable ICON "../artwork/software-update-available.ico"
 
 STRINGTABLE
 BEGIN
-STR_UPDATE_BATCH    "@echo on\r\ncall :Logit>>update.log 2>&1\r\nexit /b 0\r\n:Logit\r\nsetlocal\r\ntaskkill /im "":appexename""\r\n:retry\r\ntasklist /FI ""imagename eq :appexename"" 2>nul | find /I /N "":appexename"">nul\r\nif not %ERRORLEVEL%==""0"" goto end\r\ntaskkill /f /im "":appexename""\r\nping -n 1 -w 1000 1.1.1.1 > nul\r\ngoto retry\r\n:end\r\nstart /wait :setuppath /reinstall\r\ndel "":setuppath""\r\ndel ""%~f0""\r\n"
+STR_UPDATE_BATCH    "@echo off\r\nsetlocal\r\ntaskkill /im "":appexename""\r\n:retry\r\ntasklist /FI ""imagename eq :appexename"" 2>nul | find /I /N "":appexename"">nul\r\nif not %ERRORLEVEL%==""0"" goto end\r\ntaskkill /f /im "":appexename""\r\nping -n 1 -w 1000 1.1.1.1 > nul\r\ngoto retry\r\n:end\r\nstart /wait :setuppath /reinstall\r\ndel "":setuppath""\r\ndel ""%~f0""\r\n"
 END
 
 /*--------------------------------------------------------------------------*

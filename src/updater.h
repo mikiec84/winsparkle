@@ -58,6 +58,7 @@ public:
 	void SetTotalLength(size_t length);
 
 	static void RunUpdate(const wxString updateFilePath);
+	static BOOL RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters);
 
 	static int PROGRESS_PERCENT_UPDATE;
 	static int UPDATE_COMPLETE;

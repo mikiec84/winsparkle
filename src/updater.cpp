@@ -124,7 +124,7 @@ void Updater::RunUpdate( const wxString updateFilePath )
 	wxFileName appFileName(Resources::GetExeFileName());
 	wxString batchScript(Resources::LoadString(STR_UPDATE_BATCH));
 	wxFileName batchFileName(wxFileName::CreateTempFileName("prk"));
-	bool spawned = false;
+	BOOL spawned = false;
 
 	::DeleteFile(batchFileName.GetFullPath()); // delete the file that was created automatically with extension .tmp
 	batchFileName.SetExt("cmd");
@@ -137,7 +137,7 @@ void Updater::RunUpdate( const wxString updateFilePath )
 		if (batch.Write(batchScript))
 		{
 			batch.Close();
-			spawned = ((int)::ShellExecute(HWND_DESKTOP, L"open", batchFileName.GetFullPath(), NULL, NULL, SW_HIDE) > 32);
+			spawned = Updater::RunAsAdmin(NULL, batchFileName.GetFullPath(), NULL);
 		}
 	}
 	if (!spawned)
@@ -145,6 +145,27 @@ void Updater::RunUpdate( const wxString updateFilePath )
 		batch.Close();
 		::DeleteFile(batchFileName.GetFullPath());
 	}
+}
+
+BOOL Updater::RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters)
+{
+	SHELLEXECUTEINFO   sei;
+	ZeroMemory ( &sei, sizeof(sei) );
+
+	sei.cbSize          = sizeof(SHELLEXECUTEINFOW);
+	sei.hwnd            = hWnd;
+	sei.fMask           = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
+	sei.lpVerb          = _TEXT("runas");
+	sei.lpFile          = lpFile;
+	sei.lpParameters    = lpParameters;
+	sei.nShow           = SW_HIDE;
+
+	if (!ShellExecuteEx(&sei))
+	{
+		printf( "Error: ShellExecuteEx failed 0x%x\n", GetLastError() );
+		return FALSE;
+	}
+	return TRUE;
 }
 
 };
