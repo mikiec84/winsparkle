@@ -149,23 +149,23 @@ void Updater::RunUpdate( const wxString updateFilePath )
 
 BOOL Updater::RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters)
 {
-	SHELLEXECUTEINFO   sei;
-	ZeroMemory ( &sei, sizeof(sei) );
+    SHELLEXECUTEINFO   sei;
+    ZeroMemory ( &sei, sizeof(sei) );
 
-	sei.cbSize          = sizeof(SHELLEXECUTEINFOW);
-	sei.hwnd            = hWnd;
-	sei.fMask           = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
-	sei.lpVerb          = _TEXT("runas");
-	sei.lpFile          = lpFile;
-	sei.lpParameters    = lpParameters;
-	sei.nShow           = SW_HIDE;
+    sei.cbSize          = sizeof(SHELLEXECUTEINFOW);
+    sei.hwnd            = hWnd;
+    sei.fMask           = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_FLAG_NO_UI;
+    sei.lpVerb          = _TEXT("runas");
+    sei.lpFile          = lpFile;
+    sei.lpParameters    = lpParameters;
+    sei.nShow           = SW_HIDE;
 
-	if (!ShellExecuteEx(&sei))
-	{
-		printf( "Error: ShellExecuteEx failed 0x%x\n", GetLastError() );
-		return FALSE;
-	}
-	return TRUE;
+    if (!ShellExecuteEx(&sei))
+    {
+        printf( "Error: ShellExecuteEx failed 0x%x\n", GetLastError() );
+        return FALSE;
+    }
+    return TRUE;
 }
 
 };
