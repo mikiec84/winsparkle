@@ -50,7 +50,7 @@ WIN_SPARKLE_API void win_sparkle_init()
         {
             if ( checkUpdates )
             {
-                static const time_t ONE_DAY = 60*60*24;
+/*                static const time_t ONE_DAY = 60*60*24;
 
                 time_t lastCheck = 0;
                 Settings::ReadConfigValue("LastCheckTime", lastCheck);
@@ -63,7 +63,11 @@ WIN_SPARKLE_API void win_sparkle_init()
                     // are available.
                     UpdateChecker *check = new UpdateChecker();
                     check->Start();
-                }
+                } */
+                // Run the check in background. Only show UI if updates
+                // are available.
+                UpdateChecker *check = new UpdateChecker();
+                check->Start();
             }
         }
         else // not yet configured
@@ -75,12 +79,11 @@ WIN_SPARKLE_API void win_sparkle_init()
                 // Do nothing on the first execution of the app, for better
                 // first-time impression.
                 Settings::WriteConfigValue("DidRunOnce", true);
+				Settings::WriteConfigValue("CheckForUpdates", 1);
             }
             else
             {
-                // Only when the app is launched for the second time, ask the
-                // user for their permission to check for updates.
-                UI::AskForPermission();
+				//This should not happen
             }
         }
     }
