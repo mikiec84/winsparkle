@@ -39,7 +39,7 @@ UpdateAvailable ICON "../artwork/software-update-available.ico"
 
 STRINGTABLE
 BEGIN
-STR_UPDATE_BATCH    "@echo off\r\nsetlocal\r\ntaskkill /im "":appexename""\r\n:retry\r\ntasklist /FI ""imagename eq :appexename"" 2>nul | find /I /N "":appexename"">nul\r\nif not %ERRORLEVEL%==""0"" goto end\r\ntaskkill /f /im "":appexename""\r\nping -n 1 -w 1000 1.1.1.1 > nul\r\ngoto retry\r\n:end\r\nstart /wait :setuppath /reinstall\r\ndel "":setuppath""\r\ndel ""%~f0""\r\n"
+STR_UPDATE_BATCH    "@echo off\r\nsetlocal\r\ntaskkill /im "":appexename""\r\nping -n 1 -w 10000 1.1.1.1 > nul\r\ntasklist /FI ""imagename eq :appexename"" 2>nul | find /I /N "":appexename"">nul\r\nif ERRORLEVEL 1 goto install\r\ntaskkill /f /im "":appexename""\r\nping -n 1 -w 10000 1.1.1.1 > nul\r\ntasklist /FI ""imagename eq :appexename"" 2>nul | find /I /N "":appexename"">nul\r\nif ERRORLEVEL 1 goto install\r\necho msgbox""Miro could not be shut down, so the update cannot continue. Please report a bug at http://bugzilla.pculture.org"">a.vbs&a.vbs&del a.vbs\r\ngoto end\r\n:install\r\nstart /wait :setuppath /reinstall\r\n:end\r\ndel "":setuppath""\r\ndel ""%~f0""\r\n"
 END
 
 /*--------------------------------------------------------------------------*
