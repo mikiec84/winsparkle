@@ -421,6 +421,7 @@ void UpdateDialog::OnCloseButton(wxCommandEvent&)
 {
 	if (m_runUpdateOnClose)
 	{
+		m_closeButton->Disable();
 		Updater::RunUpdate(m_downloadedInstallerPath);
 		Close();
 	}
