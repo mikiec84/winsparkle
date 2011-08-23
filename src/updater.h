@@ -58,13 +58,14 @@ public:
 	void SetTotalLength(size_t length);
 
 	static void RunUpdate(const wxString updateFilePath);
-	static BOOL RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters);
 
 	static int PROGRESS_PERCENT_UPDATE;
 	static int UPDATE_COMPLETE;
 	static int UPDATE_CANCELLED;
 
 private:
+	static bool RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters);
+	static bool isWindowsVistaOrHigher();
 	bool m_stop;
 	wxString m_updateFileUrl;
 	wxString m_updateFileName;

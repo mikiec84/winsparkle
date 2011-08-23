@@ -124,7 +124,7 @@ void Updater::RunUpdate( const wxString updateFilePath )
 	wxFileName appFileName(Resources::GetExeFileName());
 	wxString batchScript(Resources::LoadString(STR_UPDATE_BATCH));
 	wxFileName batchFileName(wxFileName::CreateTempFileName("prk"));
-	BOOL spawned = false;
+	bool spawned = false;
 
 	::DeleteFile(batchFileName.GetFullPath()); // delete the file that was created automatically with extension .tmp
 	batchFileName.SetExt("cmd");
@@ -137,7 +137,12 @@ void Updater::RunUpdate( const wxString updateFilePath )
 		if (batch.Write(batchScript))
 		{
 			batch.Close();
-			spawned = Updater::RunAsAdmin(NULL, batchFileName.GetFullPath(), NULL);
+			if(Updater::isWindowsVistaOrHigher())
+			{
+			    spawned = Updater::RunAsAdmin(HWND_DESKTOP, batchFileName.GetFullPath(), NULL);
+			} else {
+				spawned = ((int)::ShellExecute(HWND_DESKTOP, L"open", batchFileName.GetFullPath(), NULL, NULL, SW_HIDE) > 32);
+			}
 		}
 	}
 	if (!spawned)
@@ -147,7 +152,7 @@ void Updater::RunUpdate( const wxString updateFilePath )
 	}
 }
 
-BOOL Updater::RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters)
+bool Updater::RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters)
 {
     SHELLEXECUTEINFO   sei;
     ZeroMemory ( &sei, sizeof(sei) );
@@ -162,10 +167,18 @@ BOOL Updater::RunAsAdmin(HWND hWnd, LPCWSTR lpFile, LPCWSTR lpParameters)
 
     if (!ShellExecuteEx(&sei))
     {
-        printf( "Error: ShellExecuteEx failed 0x%x\n", GetLastError() );
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
+}
+
+bool Updater::isWindowsVistaOrHigher()
+{
+	OSVERSIONINFO osvi;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	GetVersionEx(&osvi);
+	return osvi.dwMajorVersion >= 6;
 }
 
 };
